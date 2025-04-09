@@ -63,7 +63,7 @@ class CustomerImporterServiceTest extends TestCase
         $service = new CustomerImporterService($em, $api);
 
         $this->expectException(CustomerImportException::class);
-        $this->expectExceptionMessage('Failed to fetch customers from API');
+        $this->expectExceptionMessage('Customer import failed: API request failed.');
 
         $service->import(1);
     }

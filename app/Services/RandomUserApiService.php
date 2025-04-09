@@ -30,22 +30,36 @@ class RandomUserApiService implements CustomerDataProviderInterface
             ]);
 
             if ($response->failed()) {
-                Log::error('Failed to fetch customers from API', [
-                    'status' => $response->status(),
-                    'body' => $response->body(),
-                ]);
-                throw new CustomerImportException('Failed to fetch customers from API');
+                throw new CustomerImportException(
+                    "Failed to fetch customers from API",
+                    0,
+                    null,
+                    [
+                        'body' => $response->body()
+                    ]
+                );
             }
 
             $results = $response->json('results');
 
             if (!is_array($results)) {
-                throw new CustomerImportException('Invalid response structure: `results` not found or malformed.');
+                throw new CustomerImportException(
+                    'Invalid response structure: `results` not found or malformed.',
+                    0,
+                    null,
+                    ['response' => $response->json()]
+                );
             }
 
             return $results;
         } catch (\Exception $e) {
-            throw new CustomerImportException('API request failed: ' . $e->getMessage());
+            throw new CustomerImportException(
+                'API request failed.',
+                0,
+                $e,
+                ['url' => $this->apiUrl, 'count' => $count]
+            );
         }
+
     }
 }

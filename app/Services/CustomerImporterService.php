@@ -46,9 +46,15 @@ class CustomerImporterService
             $this->em->flush();
 
             return $importedCount;
+
         } catch (\Exception $e) {
-            throw new CustomerImportException('Customer import failed: ' . $e->getMessage());
+            throw new CustomerImportException(
+                'Customer import failed: ' . $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
         }
+
 
     }
 }
